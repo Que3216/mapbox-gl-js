@@ -344,7 +344,7 @@ Style.prototype = util.inherit(Evented, {
 
         var builtIns = ['vector', 'raster', 'geojson', 'video', 'image'];
         var shouldValidate = builtIns.indexOf(source.type) >= 0;
-        if (shouldValidate && this._validate(validateStyle.source, 'sources.' + id, source, null, options)) return this;
+        // if (shouldValidate && this._validate(validateStyle.source, 'sources.' + id, source, null, options)) return this;
 
         source = new SourceCache(id, source, this.dispatcher);
         this.sourceCaches[id] = source;
@@ -405,13 +405,13 @@ Style.prototype = util.inherit(Evented, {
 
         if (!(layer instanceof StyleLayer)) {
             // this layer is not in the style.layers array, so we pass an impossible array index
-            if (this._validate(validateStyle.layer,
-                    'layers.' + layer.id, layer, {arrayIndex: -1}, options)) return this;
+            // if (this._validate(validateStyle.layer,
+            //      'layers.' + layer.id, layer, {arrayIndex: -1}, options)) return this;
 
             var refLayer = layer.ref && this.getLayer(layer.ref);
             layer = StyleLayer.create(layer, refLayer);
         }
-        this._validateLayer(layer);
+        // this._validateLayer(layer);
 
         layer.setEventedParent(this, {layer: {id: layer.id}});
 
@@ -507,7 +507,7 @@ Style.prototype = util.inherit(Evented, {
 
         var layer = this.getReferentLayer(layerId);
 
-        if (filter !== null && this._validate(validateStyle.filter, 'layers.' + layer.id + '.filter', filter)) return this;
+        // if (filter !== null && this._validate(validateStyle.filter, 'layers.' + layer.id + '.filter', filter)) return this;
 
         if (util.deepEqual(layer.filter, filter)) return this;
         layer.filter = util.clone(filter);
@@ -639,7 +639,7 @@ Style.prototype = util.inherit(Evented, {
 
     queryRenderedFeatures: function(queryGeometry, params, zoom, bearing) {
         if (params && params.filter) {
-            this._validate(validateStyle.filter, 'queryRenderedFeatures.filter', params.filter);
+            // this._validate(validateStyle.filter, 'queryRenderedFeatures.filter', params.filter);
         }
 
         var includedSources = {};
@@ -667,7 +667,7 @@ Style.prototype = util.inherit(Evented, {
 
     querySourceFeatures: function(sourceID, params) {
         if (params && params.filter) {
-            this._validate(validateStyle.filter, 'querySourceFeatures.filter', params.filter);
+            // this._validate(validateStyle.filter, 'querySourceFeatures.filter', params.filter);
         }
         var sourceCache = this.sourceCaches[sourceID];
         return sourceCache ? QueryFeatures.source(sourceCache, params) : [];

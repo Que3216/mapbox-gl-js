@@ -79,7 +79,7 @@ StyleLayer.prototype = util.inherit(Evented, {
             delete this._layoutDeclarations[name];
         } else {
             var key = 'layers.' + this.id + '.layout.' + name;
-            if (this._validate(validateStyle.layoutProperty, key, name, value, options)) return;
+            // if (this._validate(validateStyle.layoutProperty, key, name, value, options)) return;
             this._layoutDeclarations[name] = new StyleDeclaration(this._layoutSpecifications[name], value);
         }
         this._updateLayoutValue(name);
@@ -113,7 +113,7 @@ StyleLayer.prototype = util.inherit(Evented, {
             if (value === null || value === undefined) {
                 delete this._paintTransitionOptions[klass || ''][name];
             } else {
-                if (this._validate(validateStyle.paintProperty, validateStyleKey, name, value, options)) return;
+                // if (this._validate(validateStyle.paintProperty, validateStyleKey, name, value, options)) return;
                 this._paintTransitionOptions[klass || ''][name] = value;
             }
         } else {
@@ -123,7 +123,7 @@ StyleLayer.prototype = util.inherit(Evented, {
             if (value === null || value === undefined) {
                 delete this._paintDeclarations[klass || ''][name];
             } else {
-                if (this._validate(validateStyle.paintProperty, validateStyleKey, name, value, options)) return;
+                // if (this._validate(validateStyle.paintProperty, validateStyleKey, name, value, options)) return;
                 this._paintDeclarations[klass || ''][name] = new StyleDeclaration(this._paintSpecifications[name], value);
             }
         }
