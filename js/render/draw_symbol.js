@@ -86,7 +86,7 @@ function drawLayerSymbols(painter, sourceCache, layer, coords, isText,
         if (!bucket) continue;
         var bothBufferGroups = bucket.bufferGroups;
         var bufferGroups = isText ? bothBufferGroups.glyph : bothBufferGroups.icon;
-        if (!bufferGroups.length) continue;
+        if (bufferGroups == null || !bufferGroups.length) continue;
 
         painter.enableTileClippingMask(coords[j]);
         drawSymbol(painter, layer, coords[j].posMatrix, tile, bucket, bufferGroups, isText,
