@@ -7,43 +7,79 @@ var normalizeURL = require('../util/mapbox').normalizeSpriteURL;
 
 module.exports = ImageSprite;
 
+function premultiply(img) {
+    // premultiply the sprite
+    var data = img.getData();
+    var newdata = img.data = new Uint8Array(data.length);
+    for (var i = 0; i < data.length; i += 4) {
+        var alpha = data[i + 3] / 255;
+        newdata[i + 0] = data[i + 0] * alpha;
+        newdata[i + 1] = data[i + 1] * alpha;
+        newdata[i + 2] = data[i + 2] * alpha;
+        newdata[i + 3] = data[i + 3];
+    }
+}
+
 function ImageSprite(base) {
     this.base = base;
     this.retina = browser.devicePixelRatio > 1;
 
-    var format = this.retina ? '@2x' : '';
-
-    ajax.getJSON(normalizeURL(base, format, '.json'), function(err, data) {
+    var loadImage = (function(err, img) {
         if (err) {
             this.fire('error', {error: err});
             return;
         }
 
-        this.data = data;
-        if (this.img) this.fire('data', {dataType: 'style'});
-    }.bind(this));
-
-    ajax.getImage(normalizeURL(base, format, '.png'), function(err, img) {
-        if (err) {
-            this.fire('error', {error: err});
-            return;
-        }
-
-        // premultiply the sprite
-        var data = img.getData();
-        var newdata = img.data = new Uint8Array(data.length);
-        for (var i = 0; i < data.length; i += 4) {
-            var alpha = data[i + 3] / 255;
-            newdata[i + 0] = data[i + 0] * alpha;
-            newdata[i + 1] = data[i + 1] * alpha;
-            newdata[i + 2] = data[i + 2] * alpha;
-            newdata[i + 3] = data[i + 3];
-        }
+        premultiply(img);
 
         this.img = img;
         if (this.data) this.fire('data', {dataType: 'style'});
-    }.bind(this));
+    }).bind(this);
+
+    var loadRemote = function() {
+        var format = this.retina ? '@2x' : '';
+
+        ajax.getJSON(normalizeURL(base, format, '.json'), function(err, data) {
+            if (err) {
+                this.fire('error', {error: err});
+                return;
+            }
+
+            this.data = data;
+            if (this.img) this.fire('data', {dataType: 'style'});
+        }.bind(this));
+
+        ajax.getImage(normalizeURL(base, format, '.png'), loadImage);
+    }
+
+    var loadLocal = function() {
+        var parsedBase = JSON.parse(this.base);
+        this.data = parsedBase.data;
+
+        var img = new Image();
+        img.getData = function() {
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context.drawImage(img, 0, 0);
+            return context.getImageData(0, 0, img.width, img.height).data;
+        };
+        img.onload = function() {
+            loadImage.bind(null, img);
+        };
+
+        this.img = img;
+        img.src = parsedBase.url;
+    }
+
+    if (base.charAt(0) !== "{") {
+        loadRemote.bind(this)();
+    } else {
+        loadLocal.bind(this)();
+    }
 }
+
 
 ImageSprite.prototype = Object.create(Evented);
 
