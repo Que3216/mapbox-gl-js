@@ -66,7 +66,7 @@ function ImageSprite(base) {
             return context.getImageData(0, 0, img.width, img.height).data;
         };
         img.onload = function() {
-            loadImage.bind(null, img);
+            loadImage(null, img);
         };
 
         this.img = img;
