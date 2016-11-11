@@ -1111,9 +1111,8 @@ class Map extends Camera {
         }
 
         this.painter.render(this.style, {
-            debug: this.showTileBoundaries,
+            showTileBoundaries: this.showTileBoundaries,
             showOverdrawInspector: this._showOverdrawInspector,
-            vertices: this.vertices,
             rotating: this.rotating,
             zooming: this.zooming
         });
