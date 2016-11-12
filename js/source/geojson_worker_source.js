@@ -117,11 +117,11 @@ GeoJSONWorkerSource.prototype = util.inherit(VectorTileWorkerSource, /** @lends 
         }
     },
 
-    removeSource(params) {
+    removeSource: function (params) {
         if (this._geoJSONIndexes[params.source]) {
             delete this._geoJSONIndexes[params.source];
         }
-    }
+    },
 
     /**
      * Index the data using either geojson-vt or supercluster
