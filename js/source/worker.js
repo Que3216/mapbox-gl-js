@@ -134,7 +134,7 @@ util.extend(Worker.prototype, {
         if (worker.removeSource !== undefined) {
             worker.removeSource(params);
         }
-    }
+    },
 
     /**
      * Load a {@link WorkerSource} script at params.url.  The script is run
