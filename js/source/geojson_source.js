@@ -205,7 +205,7 @@ GeoJSONSource.prototype = util.inherit(Evented, /** @lends GeoJSONSource.prototy
     },
 
     onRemove: function(map) {
-        this.dispatcher.broadcast('remove source', { type: this.type, source: this.id }, () => {});
+        this.dispatcher.broadcast('remove source', { type: this.type, source: this.id }, function() {});
     },
 
     serialize: function() {
